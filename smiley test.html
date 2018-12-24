@@ -1,0 +1,91 @@
+<html>
+	<head>
+		<title>Stupid ass experiment</title>
+	</head>
+	<body>
+		<h1>Rate me</h1>
+		
+		<input type="range" id="satisfaction" min="0" max="10" value="5" step="0.01"/>
+		<br />
+		<br />
+		<p id="valueIndicator"></p>
+		<p id="happinessText"></p>
+		<canvas id="myCanvas" width="150" height="150" />
+	</body>
+	<script>
+		var smileyValue = 5;
+		drawSmiley();
+		
+		/* event listener */
+		document.getElementById("satisfaction").addEventListener('input', updateSmileyValue);
+
+		function updateSmileyValue(){
+		   smileyValue = this.value;
+		   drawSmiley();
+		}
+		
+		function drawSmiley() {
+			// 75 = middle => should be 5
+		
+			var c = document.getElementById("myCanvas");
+			var ctx = c.getContext("2d");
+			let yTotalHeight = 150;
+			let xTotalWidth = 150;
+			let maxSmileyValue = 10;
+			let margin = 20;
+			let xMarginRight= xTotalWidth - margin;
+			
+			let intermediatePointsYValue = smileyValue * (yTotalHeight / maxSmileyValue);
+			
+			let point1x = 0;
+			let point1y = yTotalHeight / 2;
+			let point2x = 45;
+			let point2y = intermediatePointsYValue;
+			let point3x = 105;
+			let point3y = intermediatePointsYValue;
+			let point4x = xTotalWidth;
+			let point4y = yTotalHeight / 2;
+			
+			
+			ctx.clearRect(0, 0, xTotalWidth, yTotalHeight);
+			ctx.beginPath();
+			ctx.moveTo(point1x + margin, point1y);
+			
+			
+			// Smile
+			ctx.bezierCurveTo(point2x, point2y, point3x, point3y, point4x - margin, point4y);
+			
+			document.getElementById('valueIndicator').innerHTML = smileyValue;
+			// TODO formula for RGB values
+			if (smileyValue >= 8) {
+				ctx.fillStyle = '#51FF00';
+				ctx.strokeStyle = '#51FF00';
+				
+				document.getElementById('happinessText').innerHTML = 'Oh man that\'s a pretty happy face!';
+			}
+			else if (smileyValue <= 2) {
+				ctx.fillStyle = '#FF0800';
+				ctx.strokeStyle = '#FF0800';
+				
+				document.getElementById('happinessText').innerHTML = 'Surely it wasn\'t that bad?';
+			}
+			else {
+				ctx.fillStyle = '#FF9700';
+				ctx.strokeStyle = '#FF9700';
+				
+				document.getElementById('happinessText').innerHTML = 'Your opinion is boring';
+			}
+			
+			
+			
+			ctx.lineWidth = 5;
+			ctx.stroke();
+			
+			// Left eye
+			ctx.fillRect(35,10,10,10);
+			
+			// Right eye
+			ctx.fillRect(105,10,10,10);
+		}
+	</script>
+</html>
